@@ -34,18 +34,76 @@ img,svg{display:block;max-width:100%}
 
 /* header */
 header{position:fixed;top:0;left:0;right:0;z-index:200}
-header::before{content:"";position:absolute;inset:0;z-index:-1;background:rgba(11,12,15,.78);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);opacity:0;transition:opacity .3s}
+header::before{content:"";position:absolute;inset:0;z-index:-1;background:rgba(11,12,15,.78);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);opacity:0;clip-path:inset(0 0 0 0);transition:opacity .3s,background .3s,clip-path .5s cubic-bezier(.22,1,.36,1)}
 header.solid::before{opacity:1}
-header .bar{display:flex;align-items:center;justify-content:space-between;padding:20px 56px 16px}
+header.on-light.solid::before{background:rgba(246,242,234,.84)}
+header .bar{display:flex;align-items:center;justify-content:space-between;padding:20px 56px 16px;position:relative}
+header.on-light .bar{color:var(--ink)}
 @media(max-width:860px){header .bar{padding:18px 26px}}
-.brand{display:flex;align-items:center;font-family:var(--serif);font-size:19px;letter-spacing:.2px;font-weight:560}
+.brand{display:flex;align-items:center;gap:0;font-family:var(--serif);font-size:19px;letter-spacing:.2px;font-weight:560}
+.brand .mark{display:block;width:1.1em;height:1.1em;flex:none;margin-right:1px}
 .brand-logo{width:28px;height:28px;border-radius:7px;margin-right:10px;flex:none}
-nav.links{display:flex;justify-content:center;gap:36px;font-size:13.5px;color:var(--mist);padding:14px 56px;border-top:1px solid var(--line-dark)}
+nav.links{position:relative;display:flex;justify-content:center;gap:36px;font-size:13.5px;color:var(--mist);padding:14px 56px}
+
+header::after{
+  content:"";position:absolute;inset:0;z-index:-1;
+  pointer-events:none;
+  background-color:transparent;
+  -webkit-backdrop-filter:blur(22px);
+  backdrop-filter:blur(22px);
+  clip-path:inset(calc(100% - 1px) 0 0 0);
+  transition:clip-path .5s cubic-bezier(.22,1,.36,1), background-color .15s linear .35s;
+}
+header.on-light::after{background-color:transparent}
+header.on-light nav.links{color:var(--ink2)}
+nav.links > .navitem > a{position:relative;padding:4px 0}
+nav.links > .navitem > a::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .25s}
+nav.links > .navitem > a:hover::after{transform:scaleX(1);transform-origin:left}
+.navcta{border:1px solid var(--line-dark2);border-radius:999px;padding:9px 18px;font-size:13px;font-weight:500;transition:.2s;color:#f0ede6}
+header.on-light .navcta{border-color:var(--line-light2);color:var(--ink)}
+.navcta:hover{border-color:var(--bronze);color:var(--bronze-light)}
+
+.header-pill{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  display:flex;align-items:center;
+  width:340px;max-width:38vw;
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;
+  padding:4px 4px 4px 20px;
+  transition:.25s;
+  box-shadow:0 4px 18px rgba(0,0,0,.18);
+}
+.header-pill:focus-within{
+  width:400px;
+  border-color:rgba(255,255,255,.28);
+  background:rgba(255,255,255,.11);
+}
+.header-pill input{
+  flex:1;min-width:0;background:transparent;border:none;outline:none;
+  font-family:var(--sans);font-size:13.5px;
+  color:rgba(255,255,255,.68);
+  padding:9px 0;
+}
+.header-pill input::placeholder{color:rgba(255,255,255,.55)}
+.header-pill .hp-submit{
+  flex:none;width:32px;height:32px;border-radius:50%;
+  background:rgba(255,255,255,.12);border:none;color:rgba(255,255,255,.75);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;
+}
+.header-pill .hp-submit:hover{background:var(--bronze);color:#100b06}
+.header-pill .hp-submit svg{width:14px;height:14px}
+.header-pill.has-text .hp-submit{background:var(--bronze);color:#100b06}
+header.on-light .header-pill{background:rgba(23,21,15,.05);border-color:rgba(23,21,15,.14)}
+header.on-light .header-pill:focus-within{background:rgba(23,21,15,.08);border-color:rgba(23,21,15,.22)}
+header.on-light .header-pill input{color:rgba(23,21,15,.68)}
+header.on-light .header-pill input::placeholder{color:rgba(23,21,15,.48)}
+header.on-light .header-pill .hp-submit{background:rgba(23,21,15,.08);color:rgba(23,21,15,.7)}
+@media(max-width:960px){.header-pill{display:none}}
 @media(max-width:860px){nav.links{display:none}}
-.navitem a{position:relative;padding:4px 0}
-.navitem a::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .25s}
-.navitem a:hover::after{transform:scaleX(1);transform-origin:left}
-.navitem a[aria-current]{color:var(--bronze-light)}
+.navitem{padding:16px 0;margin:-16px 0}
 
 /* hero */
 .hero{min-height:78vh;display:flex;flex-direction:column;justify-content:center;position:relative;padding:170px 0 60px}
@@ -251,16 +309,22 @@ footer{padding:80px 0 32px;border-top:1px solid var(--line-dark);text-align:cent
 
 <header id="siteHeader">
   <div class="bar">
-    <a href="https://artibytte.com" class="brand"><img class="brand-logo" src="/logo-256.png" alt="" width="28" height="28">ArtiBytte</a>
+    <a href="https://www.artibytte.com/#top" class="brand"><img class="brand-logo" src="/logo-256.png" alt="" width="28" height="28">ArtiBytte</a>
+    <form class="header-pill" id="headerPillForm" autocomplete="off">
+      <input type="text" id="headerPillInput" placeholder="Have a system in mind?" aria-label="Start a conversation">
+      <button type="submit" class="hp-submit" aria-label="Send">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+    </form>
   </div>
   <nav class="links">
-    <div class="navitem"><a href="https://artibytte.com">Home</a></div>
-    <div class="navitem"><a href="https://products.artibytte.com">Products</a></div>
-    <div class="navitem"><a href="https://vex.artibytte.com" aria-current="page">Vex</a></div>
-    <div class="navitem"><a href="https://work.artibytte.com">Work</a></div>
-    <div class="navitem"><a href="https://company.artibytte.com">Company</a></div>
-    <div class="navitem"><a href="https://connect.artibytte.com">Connect</a></div>
-    <div class="navitem"><a href="https://career.artibytte.com">Careers</a></div>
+    <div class="navitem"><a href="https://artibytte.com/">Home</a></div>
+    <div class="navitem"><a href="https://products.artibytte.com/">Products</a></div>
+    <div class="navitem"><a href="https://vex.artibytte.com/" aria-current="page">Vex</a></div>
+    <div class="navitem"><a href="https://work.artibytte.com/">Work</a></div>
+    <div class="navitem"><a href="https://company.artibytte.com/">Company</a></div>
+    <div class="navitem"><a href="https://connect.artibytte.com/">Connect</a></div>
+    <div class="navitem"><a href="https://career.artibytte.com/">Careers</a></div>
   </nav>
 </header>
 
@@ -453,9 +517,19 @@ footer{padding:80px 0 32px;border-top:1px solid var(--line-dark);text-align:cent
 <script>
 function escapeHtml(str){return String(str).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
-/* header solid on scroll */
+/* header solid + tint on scroll */
 const header=document.getElementById('siteHeader');
-function onScroll(){ header.classList.toggle('solid',window.scrollY>40); }
+const lightSections=[...document.querySelectorAll('section.light')];
+function onScroll(){
+  header.classList.toggle('solid',window.scrollY>40);
+  const probe=90;
+  let onLight=false;
+  lightSections.forEach(s=>{
+    const r=s.getBoundingClientRect();
+    if(r.top<=probe && r.bottom>=probe) onLight=true;
+  });
+  header.classList.toggle('on-light',onLight);
+}
 document.addEventListener('scroll',onScroll,{passive:true});onScroll();
 
 /* ===================== TALK_CATALOG (VEX quoting assistant) ===================== */
